@@ -1,12 +1,19 @@
-
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const StartScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>NUTRIFLEX</Text>
-      <Button title="Start Now" onPress={() => navigation.navigate('Gender')} />
+      <View style={styles.content}>
+        <Text style={styles.title}>NUTRIFLEX</Text>
+        <Text style={styles.subtitle}>NEVER GIVE UP!</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Gender')}
+      >
+        <Text style={styles.buttonText}>Start Now</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -14,14 +21,38 @@ const StartScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#000080', 
+    padding: 20, 
+  },
+  content: {
+    justifyContent: 'center', 
+    alignItems: 'center',
+    flex: 1, 
   },
   title: {
-    fontSize: 24,
+    fontSize: 48,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#fff', 
+    marginBottom: -5, 
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight:'bold',
+    color: '#000', 
+    
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#000',
+    fontWeight: 'bold',
   },
 });
 
