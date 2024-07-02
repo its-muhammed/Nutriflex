@@ -4,11 +4,11 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const GenderScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Personal Information')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PersonalInfo')}>
         <Text style={styles.buttonText}>Male</Text>
       </TouchableOpacity>
       <Text style={styles.orText}>OR</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Personal Information')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PersonalInfo')}>
         <Text style={styles.buttonText}>Female</Text>
       </TouchableOpacity>
     </View>

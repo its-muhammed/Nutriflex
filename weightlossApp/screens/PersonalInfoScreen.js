@@ -1,5 +1,3 @@
-// screens/PersonalInfoScreen.js
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -76,12 +74,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#336699',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#fff',
   },
   input: {
     width: '80%',
@@ -90,15 +89,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
   label: {
     fontSize: 18,
     marginBottom: 10,
+    color: '#fff',
   },
   picker: {
     width: '80%',
     height: 40,
     marginBottom: 20,
+    backgroundColor: '#fff',
   },
 });
 

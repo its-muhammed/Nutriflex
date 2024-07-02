@@ -4,33 +4,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 import StartScreen from '../screens/StartScreen';
 import GenderScreen from '../screens/GenderScreen';
 import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import GoalSettingScreen from '../screens/GoalSettingScreen';
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#336699', 
-          },
-          headerTintColor: '#000', 
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-      >
-        <Stack.Screen name="Start" component={StartScreen}
-          options={{
-            title: 'Start', 
-          }}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Start" component={StartScreen} />
         <Stack.Screen name="Gender" component={GenderScreen} />
-        <Stack.Screen name="Personal Information" component={PersonalInfoScreen}/>
+        <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+        <Stack.Screen name="Goal" component={GoalSettingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default StackNavigator;
+
