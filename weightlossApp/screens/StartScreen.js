@@ -10,7 +10,7 @@ const StartScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Gender')}
+        onPress={() => navigation.navigate('Registration')}
       >
         <Text style={styles.buttonText}>Start Now</Text>
       </TouchableOpacity>
@@ -57,3 +57,4 @@ const styles = StyleSheet.create({
 });
 
 export default StartScreen;
+
