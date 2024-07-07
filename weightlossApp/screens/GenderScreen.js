@@ -20,11 +20,11 @@ function GenderScreen(){
       if (Gender === "") {
         alert("Please select your gender");
       } else {
-        const userdata_2 = { Gender };
+        const userData_1 = { Gender };
   
         const res = await axios.post(
           "http://192.168.236.242:5000/api/signInServer/Gender",
-          userdata_2,
+          userData_1,
           {
             headers: {
               "Content-type": "application/json"
