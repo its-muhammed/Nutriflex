@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import { AntDesign } from "@expo/vector-icons";
-import Icon from "react-native-vector-icons/Ionicons";
-
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./config/firebase-config";
+import { auth } from "./config/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "./config/firebase-config";
-import { useStore } from "../../App";
+import { db } from "./config/firebaseConfig";
+import { useStore } from "../App";
 
 import {
   View,
@@ -62,7 +57,7 @@ const SignUp = ({ navigation }) => {
               // Signed up
               console.log(user);
               const res = await axios.post(
-                "http://192.168.1.2:5000/api/signInServer/SignUp",
+                "http://192.168.236.242:5000/api/signInServer/SignUp",
                 { ...userData, uid: user.uid },
                 {
                   headers: {
@@ -75,7 +70,7 @@ const SignUp = ({ navigation }) => {
                 alert("User already exists, Try with another email address");
               } else {
                 console.log("Response from server:", res.data.message);
-                navigation.replace("Custom_1");
+                navigation.replace("Gender");
               }
             })
             .catch((error) => {
@@ -89,139 +84,110 @@ const SignUp = ({ navigation }) => {
       console.log("Error occure in SignIn:", error);
     }
   };
-
   return (
-    <KeyboardAvoidingWrapper>
-      <SafeAreaView style={styles.container}>
-        <ImageBackground
-          style={styles.image}
-          source={require("../../assets/appImages/signUp.jpg")}
-        >
-          <View style={styles.overlay} />
-          <View style={styles.header}>
-            <Text style={styles.greetingTitle}>Hello there</Text>
-            <Text style={styles.headTitle}>Create an Account</Text>
-          </View>
-          <View style={styles.inputTxt}>
-            <Text style={styles.textTitles}>Enter your Email</Text>
-
+    <SafeAreaView style={styles.container}>
+      <View style={styles.overlay}>
+        <View style={styles.header}>
+          <Text style={styles.greetingTitle}>Hello there</Text>
+          <Text style={styles.headTitle}>Create an Account</Text>
+        </View>
+        <View style={styles.inputTxt}>
+          <Text style={styles.textTitles}>Enter your Email</Text>
+          <TextInput
+            placeholder="Email@gmail.com"
+            placeholderTextColor={"#7166e4"}
+            value={email}
+            keyboardType="email-address"
+            onChangeText={(email) => setEmail(email)}
+            style={styles.inputArea}
+          />
+          <Text style={styles.textTitles}>Enter your Password</Text>
+          <View style={styles.passwordContainer}>
             <TextInput
-              placeholder="Email@gmail.com"
+              placeholder="* * * * * * * *"
               placeholderTextColor={"#7166e4"}
-              value={email}
-              keyboardType="email-address"
-              onChangeText={(email) => setEmail(email)}
-              style={styles.inputArea}
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+              secureTextEntry={!showPassword}
+              style={styles.passwordInputArea}
             />
-            <Text style={styles.textTitles}>Enter your Password</Text>
-
-            <View style={styles.passwordContainer}>
-              <TextInput
-                placeholder="* * * * * * * *"
-                placeholderTextColor={"#7166e4"}
-                value={password}
-                onChangeText={(password) => setPassword(password)}
-                secureTextEntry={!showPassword}
-                style={styles.passwordInputArea}
-              />
-              <TouchableOpacity
-                style={styles.passwordToggle}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Icon
-                  name={showPassword ? "eye-outline" : "eye-off-outline"}
-                  size={24}
-                  color="#7166e4"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.textTitles}>Re-Enter your Password</Text>
-
-            <View style={styles.passwordContainer}>
-              <TextInput
-                placeholder="* * * * * * * *"
-                placeholderTextColor={"#7166e4"}
-                value={rePassword}
-                onChangeText={(rePassword) => setRePassword(rePassword)}
-                secureTextEntry={!showRePassword}
-                style={styles.passwordInputArea}
-              />
-              <TouchableOpacity
-                style={styles.passwordToggle}
-                onPress={() => setShowRePassword(!showRePassword)}
-              >
-                <Icon
-                  name={showPassword ? "eye-outline" : "eye-off-outline"}
-                  size={24}
-                  color="#7166e4"
-                />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.passwordToggle}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Text style={styles.toggleIcon}>{showPassword ? 'Hide' : 'Show'}</Text>
+            </TouchableOpacity>
           </View>
-
-          <View style={styles.btnLayout}>
-            <TouchableOpacity
-              style={styles.createButton}
-              onPress={signUpFunction}
-            >
-              <Text style={styles.createText}>Create account</Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                alignSelf: "center",
-                borderBottomWidth: 2.5,
-                borderBottomColor: "rgb(217,217,217)",
-                width: "100%",
-              }}
+          <Text style={styles.textTitles}>Re-Enter your Password</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="* * * * * * * *"
+              placeholderTextColor={"#7166e4"}
+              value={rePassword}
+              onChangeText={(rePassword) => setRePassword(rePassword)}
+              secureTextEntry={!showRePassword}
+              style={styles.passwordInputArea}
             />
-            <TouchableOpacity style={styles.googleButton}>
-              <Text style={styles.googleText}>Create account with Google</Text>
-              <AntDesign
-                name="google"
-                size={24}
-                color="black"
-                style={styles.googleIcon}
-              />
-            </TouchableOpacity>
             <TouchableOpacity
-              style={styles.alreadyMadeBtn}
-              onPress={() => navigation.navigate("Login")}
+              style={styles.passwordToggle}
+              onPress={() => setShowRePassword(!showRePassword)}
             >
-              <Text style={styles.alreadyMadeText}>
-                Already have an account?{" "}
-                <Text style={{ color: "#7166e4", fontWeight: "bold" }}>
-                  Login
-                </Text>
+              <Text style={styles.toggleIcon}>{showRePassword ? 'Hide' : 'Show'}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.btnLayout}>
+          <TouchableOpacity
+            style={styles.createButton}
+            onPress={signUpFunction}
+          >
+            <Text style={styles.createText}>Create account</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignSelf: "center",
+              borderBottomWidth: 2.5,
+              borderBottomColor: "rgb(217,217,217)",
+              width: "100%",
+            }}
+          />
+          <TouchableOpacity style={styles.googleButton}>
+            <Text style={styles.googleText}>Create account with Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.alreadyMadeBtn}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.alreadyMadeText}>
+              Already have an account?{" "}
+              <Text style={{ color: "#7166e4", fontWeight: "bold" }}>
+                Login
               </Text>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </SafeAreaView>
-    </KeyboardAvoidingWrapper>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#336699',
+    padding: 20,
   },
   overlay: {
     flex: 1,
+    width: '100%',
+    padding: 20,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
   },
   header: {
     paddingTop: height * 0.05,
-    width: width,
+    width: '100%',
     alignItems: "center",
   },
   greetingTitle: {
@@ -271,7 +237,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
   },
-
+  toggleIcon: {
+    color: '#7166e4',
+    fontSize: width * 0.04,
+  },
   btnLayout: {
     flex: 1,
     justifyContent: "flex-end",
@@ -279,7 +248,6 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: "center",
   },
-
   createButton: {
     alignSelf: "center",
     padding: width * 0.04,
@@ -294,7 +262,6 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     textAlign: "center",
   },
-
   googleButton: {
     alignSelf: "center",
     padding: width * 0.04,
@@ -302,16 +269,11 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.02,
     width: "100%",
     borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   googleText: {
     color: "#ffffff",
     fontSize: width * 0.05,
-  },
-  googleIcon: {
-    marginRight: width * 0.02,
+    textAlign: 'center',
   },
   alreadyMadeBtn: {
     padding: width * 0.02,

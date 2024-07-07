@@ -10,7 +10,7 @@ const StartScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Registration')}
+        onPress={() => navigation.navigate('SignUp')}
       >
         <Text style={styles.buttonText}>Start Now</Text>
       </TouchableOpacity>
