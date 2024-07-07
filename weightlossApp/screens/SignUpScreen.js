@@ -179,12 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#336699',
     padding: 20,
   },
-  overlay: {
-    flex: 1,
-    width: '100%',
-    padding: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
+
   header: {
     paddingTop: height * 0.05,
     width: '100%',
