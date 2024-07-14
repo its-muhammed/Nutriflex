@@ -49,7 +49,7 @@ const LogIn = ({ navigation }) => {
               } else {
                 console.log("No such document!");
               }
-              navigation.navigate("PlanScreen");
+              navigation.navigate("Navigation");
             })
             .catch((error) => {
               const errorCode = error.code;

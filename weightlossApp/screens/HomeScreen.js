@@ -1,4 +1,4 @@
-/*import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,11 +14,12 @@ import { useStore } from "../App";
 
 const HomeScreen = () => {
   const currentUser =  useStore((state) => state.currentUser);
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [age, setAge] = useState(null);
   const [weight, setWeight] = useState(null);
-  const [height, setHeight] = useState(null);
-  const [gender, setGender] = useState(null);
+  const [heightCm, setHeightCm] = useState(null);
+  const [activityLevel, setActivityLevel] = useState(null);
+  const [gender, selectedGender] = useState(null);
   const [caloriesConsumedToday, setCaloriesConsumedToday] = useState(0);
   const [caloriesBurntToday, setCaloriesBurntToday] = useState(0);
 
@@ -27,9 +28,10 @@ const HomeScreen = () => {
   useEffect (()=>{
     setUserName(currentUser.name);
     setAge(currentUser.age);
-    setWeight(currentUser.weight);
-    setHeightCm(currentUser.height);
-    selectedGender(currentUser.gender);
+    setWeight(currentUser.selectedWeight);
+    setHeightCm(currentUser.selectedHeight);
+    setActivityLevel(currentUser.selectedOption);
+    selectedGender(currentUser.selectedGender);
     // setHealthyCalorieDeficit(healthyCalorieDeficit);
   },[currentUser]);
 
@@ -42,22 +44,23 @@ const HomeScreen = () => {
 
   // setUserName(currentUser.name);
 
-  console.log(name);
+  console.log(userName);
   console.log(age);
   console.log(weight);
-  console.log(height);
+  console.log(heightCm);
+  console.log(activityLevel);
   console.log(gender);
 
   const test = gender;
   let healthyCalorieDeficit = 0; 
 
   if (test==="Male") {
-    const {bmr,tdee} = calculateBMRMaleWithActivity(weight,height,age,);
+    const {bmr,tdee} = calculateBMRMaleWithActivity(weight,height,age,activityLevel);
     console.log(bmr +" "+ tdee);
     healthyCalorieDeficit = calculateHealthyCalorieDeficitMale(tdee, age);
     console.log(healthyCalorieDeficit);
   } else if (test==="Female") {
-    const { bmr, tdee } = calculateBMRFemaleWithActivity(weight,height,age,a);
+    const { bmr, tdee } = calculateBMRFemaleWithActivity(weight,height,age,activityLevel);
     console.log(bmr +" "+ tdee);
     healthyCalorieDeficit = calculateHealthyCalorieDeficitFemale(tdee, age);
     console.log(healthyCalorieDeficit);
@@ -104,18 +107,9 @@ const HomeScreen = () => {
               </View>
               <View style={styles.scheduleItems}>
                 <View style={styles.scheduleItemsContainer}>
-                  <Text>Push up</Text
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
-                    <Text style={styles.doneText}>Done</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={styles.scheduleItems}>
-                <View style={styles.scheduleItemsContainer}>
-                  <Text>Push up</Text
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
+                  <Text>Push up</Text>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
                     <Text style={styles.doneText}>Done</Text>
                   </TouchableOpacity>
                 </View>
@@ -123,8 +117,17 @@ const HomeScreen = () => {
               <View style={styles.scheduleItems}>
                 <View style={styles.scheduleItemsContainer}>
                   <Text>Push up</Text>
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
+                    <Text style={styles.doneText}>Done</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.scheduleItems}>
+                <View style={styles.scheduleItemsContainer}>
+                  <Text>Push up</Text>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
                     <Text style={styles.doneText}>Done</Text>
                   </TouchableOpacity>
                 </View>
@@ -137,8 +140,8 @@ const HomeScreen = () => {
               <View style={styles.scheduleItems}>
                 <View style={styles.scheduleItemsContainer}>
                   <Text>Push up</Text>
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
                     <Text style={styles.doneText}>Done</Text>
                   </TouchableOpacity>
                 </View>
@@ -146,8 +149,8 @@ const HomeScreen = () => {
               <View style={styles.scheduleItems}>
                 <View style={styles.scheduleItemsContainer}>
                   <Text>Push up</Text>
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
                     <Text style={styles.doneText}>Done</Text>
                   </TouchableOpacity>
                 </View>
@@ -155,8 +158,8 @@ const HomeScreen = () => {
               <View style={styles.scheduleItems}>
                 <View style={styles.scheduleItemsContainer}>
                   <Text>Push up</Text>
-                  {/* Schedule Item */
-                  /*<TouchableOpacity style={styles.doneButton}>
+                  {/* Schedule Item */}
+                  <TouchableOpacity style={styles.doneButton}>
                     <Text style={styles.doneText}>Done</Text>
                   </TouchableOpacity>
                 </View>
@@ -169,7 +172,7 @@ const HomeScreen = () => {
   );
 };
 
-/*const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f4f6fa",
@@ -300,4 +303,4 @@ const HomeScreen = () => {
   },
 });
 
-export default HomeScreen;*/
+export default HomeScreen;

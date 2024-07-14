@@ -8,7 +8,8 @@ import GenderScreen from '../screens/GenderScreen';
 import LoginScreen from '../screens/LoginScreen';
 import PersonalInfoScreen from '../screens/PersonalInfoScreen';
 import GoalSettingScreen from '../screens/GoalSettingScreen';
-import PlanScreen from '../screens/PlanScreen';
+import MainContainer from "../screens/CustomNavigationBar";
+
 //import HomeScreen from '../screens/HomeScreen';
 
 const Stack = createStackNavigator();
@@ -23,7 +24,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
         <Stack.Screen name="GoalSetting" component={GoalSettingScreen} />
-        <Stack.Screen name="PlanScreen" component={PlanScreen}/>
+        <Stack.Screen name="Navigation" component={MainContainer}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

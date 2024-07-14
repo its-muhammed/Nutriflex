@@ -7,20 +7,18 @@ import axios from 'axios';
 function GenderScreen(){
 
   const navigation = useNavigation();
-  const [Gender, setGender] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
 
   const handleGenderSelection = (gender) =>{
-    if (gender !== Gender){
-      setGender(gender);
-    }
+    setSelectedGender(gender);
   };
 
   const handleSubmit = async () => {
     try {
-      if (Gender === "") {
+      if (selectedGender === "") {
         alert("Please select your gender");
       } else {
-        const userData_1 = { Gender };
+        const userData_1 = { Gender: selectedGender };
   
         const res = await axios.post(
           "http://192.168.8.242:5000/api/signInServer/Gender",
@@ -48,12 +46,12 @@ function GenderScreen(){
           <Button
             title="Male"
             onPress={() => handleGenderSelection('Male')}
-            color="#336699"
+            color={selectedGender === 'Male' ? '#ffffff' : '#336699'}
           />
           <Button
             title="Female"
             onPress={() => handleGenderSelection('Female')}
-            color="#336699"
+            color={selectedGender === 'Female' ? '#ffffff' : '#336699'}
           />
         </View>
         <Button title="Next" onPress={handleSubmit} color="#336699" />

@@ -26,14 +26,14 @@ const signIn = router.post("/SignUp", async (req, res) => {
 
         const email = req.body.email;
         const password = req.body.password;
-        const userID = req.body.uid;
+        const userID = req.body.uid; // Ensure you receive 'uid' from client or generate it
 
         const hashedPassword = await bcrypt.hash(password, 8);
 
         userData = {
             email: email,
             password: hashedPassword,
-            uid: userID,
+            uid: userID, // Assign 'uid' here
         };
 
         const user = { email: email };
@@ -45,6 +45,7 @@ const signIn = router.post("/SignUp", async (req, res) => {
         res.status(500).json({ error: "Error in database connection" });
     }
 });
+
 
 const custom_1Data = router.post("/Gender", async (req, res) => {
     try {
@@ -86,35 +87,50 @@ const custom_2Data = router.post("/PersonalInfo", async (req, res) => {
 
 const custom_3Data = router.post("/GoalSetting", async (req, res) => {
     try {
-        const goal = req.body.goal;
+        const weightLossGoal = req.body.weightLossGoal;
 
-        userData_3 = {
-            goal: goal,
+        // Ensure userData is properly populated with uid
+        if (!userData || !userData.uid) {
+            return res.status(400).json({ error: "User data is missing 'uid'." });
+        }
+
+        const userData_3 = {
+            weightLossGoal: weightLossGoal,
         };
 
-        // Generate mock plans (replace with actual logic later)
-        const workoutPlan = generateWorkoutPlan(goal);
-        const mealPlan = generateMealPlan(goal);
-
-
+        // Combine all user data into one object
         const combinedData = {
             ...userData,
             ...userData_1,
             ...userData_2,
             ...userData_3,
-
-            workoutPlan: workoutPlan,
-            mealPlan: mealPlan,
         };
 
-        await db.userRef.doc(userData.uid).set(combinedData);
+        // Clean up undefined properties
+        const cleanedData = cleanObject(combinedData);
+
+        // Assuming db.userRef is properly initialized
+        await db.userRef.doc(userData.uid).set(cleanedData);
 
         res.send({ success: true, UID: userData.uid });
 
     } catch (error) {
         console.error("Error in GoalSetting endpoint:", error);
-        res.status(500).json({ error: "Error in database connection" });
+        res.status(500).json({ error: "Internal server error occurred." });
     }
 });
+
+// Helper function to clean object by removing undefined properties
+function cleanObject(obj) {
+    const cleaned = {};
+    Object.keys(obj).forEach(key => {
+        if (obj[key] !== undefined) {
+            cleaned[key] = obj[key];
+        }
+    });
+    return cleaned;
+}
+
+
 
 module.exports = router;
