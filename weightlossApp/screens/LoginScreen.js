@@ -49,7 +49,7 @@ const LogIn = ({ navigation }) => {
               } else {
                 console.log("No such document!");
               }
-              navigation.navigate("Navigation");
+              navigation.navigate("PlanScreen");
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -64,7 +64,7 @@ const LogIn = ({ navigation }) => {
           );
           const uid = user.uid;
           const res = await axios.post(
-            "http://192.168.236.242:5000/api/logInServer/LogIn",
+            "http://192.168.8.242:5000/api/logInServer/LogIn",
             { email, password, uid },
             {
               headers: {

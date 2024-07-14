@@ -27,7 +27,7 @@ function PersonalInfoScreen() {
         Alert.alert('Please fill all fields');
       } else {
         const res = await axios.post(
-          'http://192.168.236.242:5000/api/signInServer/PersonalInfo',
+          'http://192.168.8.242:5000/api/signInServer/PersonalInfo',
           userdata_2,
           {
             headers: {

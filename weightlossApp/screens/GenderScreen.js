@@ -23,7 +23,7 @@ function GenderScreen(){
         const userData_1 = { Gender };
   
         const res = await axios.post(
-          "http://192.168.236.242:5000/api/signInServer/Gender",
+          "http://192.168.8.242:5000/api/signInServer/Gender",
           userData_1,
           {
             headers: {

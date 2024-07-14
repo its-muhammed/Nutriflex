@@ -1,4 +1,4 @@
-GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY={
+{
     "type": "service_account",
     "project_id": "nutriflex-cc423",
     "private_key_id": "e8f8a8325232c94c7768ea493a82bd43676cdbb7",

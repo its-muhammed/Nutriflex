@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./config/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./config/firebaseConfig";
-import { useStore } from "../App";
-
 import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   SafeAreaView,
   TouchableOpacity,
   TextInput,
@@ -23,67 +18,74 @@ const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
-
 
   const signUpFunction = async () => {
     const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
-    const userData = {
-      email: email,
-      password: password,
-    };
-
     try {
-
-
       if (email === "" || password === "" || rePassword === "") {
         alert("Please fill all the fields");
-        //navigation.navigate("Signup");
-      } else {
-        if (emailRegex.test(email) === false) {
-          alert("Please enter a valid email address");
-        } else if (password.length < 8 || rePassword.length < 8) {
-          alert("Password and Repassword must be at least 8 characters long");
-        } else if (password != rePassword) {
-          alert("Confirm Password does not match, Enter Again");
-        } else if (password === rePassword) {
-          createUserWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential) => {
-              const user = userCredential.user;
-              const userID = user.uid;
-              // Signed up
-              console.log(user);
-              const res = await axios.post(
-                "http://192.168.236.242:5000/api/signInServer/SignUp",
-                { ...userData, uid: user.uid },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
-              const data = await res.data;
-              if (data.exists) {
-                alert("User already exists, Try with another email address");
-              } else {
-                console.log("Response from server:", res.data.message);
-                navigation.replace("Gender");
-              }
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              // ..
-            });
+        return;
+      }
+
+      if (emailRegex.test(email) === false) {
+        alert("Please enter a valid email address");
+        return;
+      }
+
+      if (password.length < 8 || rePassword.length < 8) {
+        alert("Password and Repassword must be at least 8 characters long");
+        return;
+      }
+
+      if (password !== rePassword) {
+        alert("Confirm Password does not match, Enter Again");
+        return;
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const userID = user.uid;
+
+      console.log("User signed up:", user);
+
+      // Send user data to server
+      const userData = {
+        email: email,
+        password: password,
+        uid: userID,
+      };
+
+      const response = await axios.post(
+        "http://192.168.8.242:5000/api/signInServer/SignUp",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
+
+      const responseData = response.data;
+
+      if (responseData.exists) {
+        alert("User already exists, Try with another email address");
+      } else {
+        console.log("Response from server:", responseData.message);
+        navigation.replace("Gender");
       }
     } catch (error) {
-      console.log("Error occure in SignIn:", error);
+      if (error.code === "auth/email-already-in-use") {
+        alert("Email address is already in use. Please use another email.");
+      } else {
+        console.error("Signup error:", error.message);
+        alert("Error occurred during signup. Please try again later.");
+      }
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.overlay}>
@@ -179,7 +181,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#336699',
     padding: 20,
   },
-
+  overlay: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   header: {
     paddingTop: height * 0.05,
     width: '100%',

@@ -1,13 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('./firebaseConfig');
-const admin = require("firebase-admin");
+const db = require('./firebase-config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const router = express.Router(); // Use Router instead of a separate express app
+const router = express.Router();
 const cors = require('cors');
-
- 
 
 router.use(bodyParser.json());
 router.use(express.json());
@@ -17,112 +14,106 @@ let userData = null;
 let userData_1 = null;
 let userData_2 = null;
 let userData_3 = null;
-// let refreshTokens = [];
+
+router.use(cors());
 
 const signIn = router.post("/SignUp", async (req, res) => {
-
     try {
-
-        const emailExit = await db.userRef.where('email', '==', req.body.email).get();
-        if (!emailExit.empty) {
-            res.status(200).json({ exists: true, message: "email already exists, try again with different email!" });
-            //res.send({messsage: "email already exists, try again with different email!"});
-        } else {
-
-            console.log(req.body);
-            const email = req.body.email;
-            const password = req.body.password;
-            const userID = req.body.uid;
-
-            const hashedPassword = await bcrypt.hash(password, 8);
-
-
-            userData = {
-
-                email: email,
-                password: hashedPassword,
-                uid: userID,
-
-
-            }
-
-            //const response = await db.userRef.add(userData);
-            //res.send({success: true, message: "Hello from backend!" });
-
-            const user = { email:email };
-            const token = jwt.sign(user, process.env.TOKEN_KEY); // new token one
-            res.header("auth-token", token).send(token);
+        const emailExists = await db.userRef.where('email', '==', req.body.email).get();
+        if (!emailExists.empty) {
+            return res.status(200).json({ exists: true, message: "Email already exists, try again with a different email!" });
         }
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "error in db connection" })
-    }
+        const email = req.body.email;
+        const password = req.body.password;
+        const userID = req.body.uid;
 
+        const hashedPassword = await bcrypt.hash(password, 8);
+
+        userData = {
+            email: email,
+            password: hashedPassword,
+            uid: userID,
+        };
+
+        const user = { email: email };
+        const token = jwt.sign(user, process.env.TOKEN_KEY);
+        res.header("auth-token", token).send(token);
+
+    } catch (error) {
+        console.error("Error in SignUp:", error);
+        res.status(500).json({ error: "Error in database connection" });
+    }
 });
 
-
-const custom_1Data = router.post("/Custom_1", async (req, res) => {
+const custom_1Data = router.post("/Gender", async (req, res) => {
     try {
-        console.log(req.body);
-        const name = req.body.name;
-        const selectedGender = req.body.selectedGender;
-        const age = req.body.age;
+        const gender = req.body.gender;
 
         userData_1 = {
-            name: name,
-            selectedGender: selectedGender,
-            age: age,
-        }
-        res.send({ success: true, message: "Hello from backend!" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "error in db connection" })
-    }
+            gender: gender,
+        };
 
+        res.send({ success: true, message: "Received gender data!" });
+
+    } catch (error) {
+        console.error("Error in Gender endpoint:", error);
+        res.status(500).json({ error: "Error in database connection" });
+    }
 });
 
-const custom_2Data = router.post("/Custom_2", async (req, res) => {
+const custom_2Data = router.post("/PersonalInfo", async (req, res) => {
     try {
-        console.log(req.body);
-        const selectedHeight = req.body.selectedHeight;
-        const selectedWeight = req.body.selectedWeight;
-        const selectedWeightLoss = req.body.selectedWeightLoss;
+        const name = req.body.name;
+        const age = req.body.age;
+        const height = req.body.height;
+        const weight = req.body.weight;
 
         userData_2 = {
-            selectedHeight: selectedHeight,
-            selectedWeight: selectedWeight,
-            selectedWeightLoss: selectedWeightLoss
-        }
+            name: name,
+            age: age,
+            height: height,
+            weight: weight,
+        };
 
-        res.send({ success: true, message: "Hello from backend!" });
+        res.send({ success: true, message: "Received personal info data!" });
+
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "error in db connection" })
+        console.error("Error in PersonalInfo endpoint:", error);
+        res.status(500).json({ error: "Error in database connection" });
     }
 });
 
-const custom_3Data = router.post("/Custom_3", async (req, res) => {
+const custom_3Data = router.post("/GoalSetting", async (req, res) => {
     try {
-        console.log(req.body);
-        const selectedOption = req.body.selectedOption;
+        const goal = req.body.goal;
 
         userData_3 = {
-            selectedOption: selectedOption,
-        }
+            goal: goal,
+        };
+
+        // Generate mock plans (replace with actual logic later)
+        const workoutPlan = generateWorkoutPlan(goal);
+        const mealPlan = generateMealPlan(goal);
+
 
         const combinedData = {
             ...userData,
             ...userData_1,
             ...userData_2,
             ...userData_3,
-        }
 
-        const response = db.userRef.doc(userData.uid).set(combinedData);
+            workoutPlan: workoutPlan,
+            mealPlan: mealPlan,
+        };
+
+        await db.userRef.doc(userData.uid).set(combinedData);
+
         res.send({ success: true, UID: userData.uid });
+
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "error in db connection" })
+        console.error("Error in GoalSetting endpoint:", error);
+        res.status(500).json({ error: "Error in database connection" });
     }
 });
 
